@@ -1,7 +1,7 @@
-from typing import TYPE_CHECKING, ClassVar, Optional
+from typing import TYPE_CHECKING, Optional
 
-from pydantic import Field, PrivateAttr
-from tygle.base import Resource, RESTs
+from pydantic import PrivateAttr
+from tygle.base import Chain
 from tygle_sheets.types.enums import (
     DateTimeRenderOption,
     Dimension,
@@ -9,40 +9,32 @@ from tygle_sheets.types.enums import (
     ValueInputOption,
     ValueRenderOption,
 )
+from tygle_sheets.types.resources.values import ValueRange
 
 if TYPE_CHECKING:
     from tygle_sheets.rest.values import Values
 
 
-class ValueRangeRESTs(RESTs):
-    def __init__(self, Values: "Values"):
-        self.Values = Values
+class ValuesChain(Chain):
+    _rest: "Values" = PrivateAttr()
+    spreadsheet_id: str
 
-
-class ValueRange(Resource):
-    """Data within a range of the spreadsheet.
-
-    https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values#ValueRange
-    """
-
-    range: str = Field()
-    major_dimension: Dimension = Field(alias="majorDimension")
-    values: list[list] = Field()
-
-    __rests__: ClassVar[ValueRangeRESTs] = PrivateAttr()
+    def __init__(self, rest, **data):
+        super().__init__(**data)
+        self._rest = rest
 
     def get(
         self,
-        spreadsheet_id: str,
+        range: str,
         /,
         *,
         major_dimension: Optional[Dimension] = None,
         value_render_option: Optional[ValueRenderOption] = None,
         date_time_render_option: Optional[DateTimeRenderOption] = None,
     ):
-        return self.__rests__.Values.get(
-            spreadsheet_id,
-            self.range,
+        return self._rest.get(
+            self.spreadsheet_id,
+            range,
             major_dimension=major_dimension,
             value_render_option=value_render_option,
             date_time_render_option=date_time_render_option,
@@ -50,9 +42,9 @@ class ValueRange(Resource):
 
     def append(
         self,
-        spreadsheet_id: str,
         range: str,
         /,
+        value_range: ValueRange,
         *,
         value_input_option: Optional[ValueInputOption] = None,
         insert_data_option: Optional[InsertDataOption] = None,
@@ -60,11 +52,10 @@ class ValueRange(Resource):
         response_value_render_option: Optional[ValueRenderOption] = None,
         response_date_time_render_option: Optional[DateTimeRenderOption] = None,
     ):
-        """Chain to :meth:`.Values.append`."""
-        return self.__rests__.Values.append(
-            spreadsheet_id,
+        return self._rest.append(
+            self.spreadsheet_id,
             range,
-            self,
+            value_range,
             value_input_option=value_input_option,
             insert_data_option=insert_data_option,
             include_values_in_response=include_values_in_response,

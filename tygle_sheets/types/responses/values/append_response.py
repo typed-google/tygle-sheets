@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from tygle.apis.sheets.types.responses import UpdateValuesResponse
+from tygle_sheets.types.responses import UpdateValuesResponse
 
 
 class AppendValuesResponse(BaseModel):

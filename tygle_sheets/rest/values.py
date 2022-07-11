@@ -1,22 +1,26 @@
 from typing import Optional
 
+from aiogoogle import GoogleAPI
 from pydantic import create_model
-from tygle.apis.sheets.types.enums import (
+from tygle.base import REST, DataRequest
+from tygle.client import Client
+from tygle_sheets.types.enums import (
     DateTimeRenderOption,
     Dimension,
     InsertDataOption,
     ValueInputOption,
     ValueRenderOption,
 )
-from tygle.apis.sheets.types.resources.values import ValueRange
-from tygle.apis.sheets.types.responses.values import AppendValuesResponse
-from tygle.base import REST, DataRequest
+from tygle_sheets.types.resources.values import ValueRange, ValueRangeRESTs
+from tygle_sheets.types.responses.values import AppendValuesResponse
 
 
 class Values(REST):
-    @property
-    def ValueRange(self):
-        return create_model("ValueRange", rest=self, __base__=ValueRange)
+    def __init__(self, client: Client, parent: GoogleAPI) -> None:
+        super().__init__(client, parent)
+
+        self.ValueRange = create_model("ValueRange", __base__=ValueRange)
+        self.ValueRange.__rests__ = ValueRangeRESTs(self)
 
     def get(
         self,
@@ -37,9 +41,13 @@ class Values(REST):
             self.parent.spreadsheets.values.get(
                 spreadsheetId=spreadsheet_id,
                 range=range,
-                majorDimension=major_dimension.value,
-                valueRenderOption=value_render_option,
-                dateTimeRenderOption=date_time_render_option,
+                majorDimension=major_dimension.value if major_dimension else None,
+                valueRenderOption=value_render_option.value
+                if value_render_option
+                else None,
+                dateTimeRenderOption=date_time_render_option.value
+                if date_time_render_option
+                else None,
             ),
             self.ValueRange,
         )
@@ -67,11 +75,19 @@ class Values(REST):
                 spreadsheetId=spreadsheet_id,
                 range=range,
                 json=value_range.dict(),
-                valueInputOption=value_input_option.value,
-                insertDataOption=insert_data_option.value,
+                valueInputOption=value_input_option.value
+                if value_input_option
+                else None,
+                insertDataOption=insert_data_option.value
+                if insert_data_option
+                else None,
                 includeValuesInResponse=include_values_in_response,
-                responseValueRenderOption=response_value_render_option.value,
-                responseDateTimeRenderOption=response_date_time_render_option.value,
+                responseValueRenderOption=response_value_render_option.value
+                if response_value_render_option
+                else None,
+                responseDateTimeRenderOption=response_date_time_render_option.value
+                if response_date_time_render_option
+                else None,
             ),
             AppendValuesResponse,
         )

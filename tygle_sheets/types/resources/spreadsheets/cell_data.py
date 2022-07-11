@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from .other import ExtendedValue
+from .extended_value import ExtendedValue
 
 
 class CellData(BaseModel):

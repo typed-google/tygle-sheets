@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import List, Optional
 
 from aiogoogle import GoogleAPI
 from pydantic import create_model
-from tygle.apis.sheets.types.resources.spreadsheets import Spreadsheet
 from tygle.base import REST, DataRequest
-from tygle.client.client import Client
+from tygle.client import Client
+from tygle_sheets.types.resources.spreadsheets import Spreadsheet, SpreadsheetRESTs
 
 from .values import Values
 
@@ -14,16 +14,17 @@ class Spreadsheets(REST):
         super().__init__(client, parent)
         self.values = Values(client, self.parent)  # todo move
 
-    @property
-    def Spreadsheet(self):
-        return create_model("Spreadsheet", rest=self, __base__=Spreadsheet)
+        self.Spreadsheet = create_model("Spreadsheet", __base__=Spreadsheet)
+        self.Spreadsheet.__rests__ = SpreadsheetRESTs(self, self.values)
 
-    async def get(
+    def get(
         self,
         spreadsheet_id: str,
-        ranges: Optional[list[str]] = None,
+        /,
+        *,
+        ranges: Optional[List[str]] = None,
         include_grid_data: bool = True,
-    ) -> DataRequest["Spreadsheet"]:
+    ) -> DataRequest[Spreadsheet]:
         if ranges is None:
             ranges = []
         return DataRequest(
@@ -33,5 +34,5 @@ class Spreadsheets(REST):
                 ranges=ranges,
                 includeGridData=include_grid_data,
             ),
-            Spreadsheet,
+            self.Spreadsheet,
         )

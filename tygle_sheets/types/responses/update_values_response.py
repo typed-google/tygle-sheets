@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel, Field
-from tygle.apis.sheets.types.resources.values import ValueRange
+from tygle_sheets.types.resources.values import ValueRange
 
 
 class UpdateValuesResponse(BaseModel):
