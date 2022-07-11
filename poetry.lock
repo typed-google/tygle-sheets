@@ -58,7 +58,7 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "astroid"
-version = "2.11.6"
+version = "2.11.7"
 description = "An abstract syntax tree for Python with inference support."
 category = "dev"
 optional = false
@@ -377,24 +377,19 @@ python-versions = "*"
 
 [[package]]
 name = "tygle"
-version = "0.1.1"
+version = "0.1.2"
 description = "Typed Google or simply tygle."
 category = "main"
 optional = false
-python-versions = "^3.10"
-develop = true
+python-versions = ">=3.10,<4.0"
 
 [package.dependencies]
 aiogoogle = "4.0.0"
-pydantic = "^1.9.0"
+pydantic = ">=1.9.0,<2.0.0"
 
 [package.extras]
 drive = ["tygle-drive (>=0.1.0,<0.2.0)"]
 sheets = ["tygle-sheets (>=0.1.0,<0.2.0)"]
-
-[package.source]
-type = "directory"
-url = "../tygle"
 
 [[package]]
 name = "typing-extensions"
@@ -427,7 +422,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "c506b37f897271d311f2de3b686c9012d684916e3910c2bbe6aff169fa547ef3"
+content-hash = "0e2e937e16eb6e419a9b7ec7ea2f5c19a0f45ac0cdaaee0fe962c8c78f87b60a"
 
 [metadata.files]
 aiofiles = [

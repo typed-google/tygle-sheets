@@ -8,7 +8,7 @@ packages = [{include = "tygle_sheets"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-tygle = {path = "/home/shmoo/projects/typed-google/tygle", develop = true}
+tygle = "^0.1.2"
 
 
 [tool.poetry.group.dev.dependencies]
