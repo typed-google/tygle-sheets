@@ -2,7 +2,8 @@ from typing import Optional
 
 from aiogoogle import GoogleAPI
 from pydantic import create_model
-from tygle.base import REST, DataRequest
+from tygle.base import REST
+from tygle.base.requests import DataRequest
 from tygle.client import Client
 from tygle_sheets.types.enums import (
     DateTimeRenderOption,
